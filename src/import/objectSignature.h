@@ -37,8 +37,6 @@
 namespace libfwbuilder
 {
     class AddressRange;
-    class AddressRangeIPv6;
-
     class AttachedNetworks;
     class Cluster;
     class CustomService;
@@ -183,7 +181,6 @@ public:
     virtual void* dispatch(libfwbuilder::IPv4*, void*);
     virtual void* dispatch(libfwbuilder::IPv6*, void*);
     virtual void* dispatch(libfwbuilder::AddressRange*, void*);
-    virtual void* dispatch(libfwbuilder::AddressRangeIPv6*, void*);
     virtual void* dispatch(libfwbuilder::AddressTable*, void*);
     virtual void* dispatch(libfwbuilder::physAddress*, void*);
     virtual void* dispatch(libfwbuilder::IPService*, void*);
@@ -196,10 +193,7 @@ public:
     virtual void* dispatch(libfwbuilder::DNSName*, void*);
     virtual void* dispatch(libfwbuilder::ObjectGroup*, void*);
     virtual void* dispatch(libfwbuilder::ServiceGroup*, void*);
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Woverloaded-virtual"
     virtual void* dispatch(libfwbuilder::AttachedNetworks*, void*);
-#pragma GCC diagnostic pop
     virtual void* dispatch(libfwbuilder::UserService*, void*);
     virtual void* dispatch(libfwbuilder::DynamicGroup*, void*);
     

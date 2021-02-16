@@ -21,7 +21,6 @@
 
 */
 
-#include "config.h"
 #include "global.h"
 
 #include <QtDebug>
@@ -33,7 +32,6 @@
 #include "interfacePropertiesObjectFactory.h"
 
 #include "fwbuilder/AddressRange.h"
-#include "fwbuilder/AddressRangeIPv6.h"
 #include "fwbuilder/AddressTable.h"
 #include "fwbuilder/Cluster.h"
 #include "fwbuilder/CustomService.h"
@@ -131,7 +129,6 @@ void FWBTree::init_statics()
         systemGroupPaths[DNSName::TYPENAME]       = "Objects/DNS Names";
         systemGroupPaths[AddressTable::TYPENAME]  = "Objects/Address Tables";
         systemGroupPaths[AddressRange::TYPENAME]  = "Objects/Address Ranges";
-        systemGroupPaths[AddressRangeIPv6::TYPENAME]  = "Objects/Address Ranges";
         systemGroupPaths[ObjectGroup::TYPENAME]   = "Objects/Groups";
         systemGroupPaths[DynamicGroup::TYPENAME]  = "Objects/Groups";
         systemGroupPaths[Host::TYPENAME]          = "Objects/Hosts";
@@ -185,9 +182,6 @@ void FWBTree::init_statics()
 
         systemGroupTypes[AddressRange::TYPENAME]=  ObjectGroup::TYPENAME;
         systemGroupNames[AddressRange::TYPENAME]=  "Address Ranges" ;
-
-        systemGroupTypes[AddressRangeIPv6::TYPENAME]=  ObjectGroup::TYPENAME;
-        systemGroupNames[AddressRangeIPv6::TYPENAME]=  "Address Ranges" ;
 
         systemGroupTypes[ObjectGroup::TYPENAME]=   ObjectGroup::TYPENAME;
         systemGroupNames[ObjectGroup::TYPENAME]=   "Groups"         ;
@@ -449,34 +443,34 @@ bool FWBTree::validateForInsertion(FWObject *target, FWObject *obj, QString &err
     Firewall *fw = Firewall::cast(ta);
     Interface *intf = Interface::cast(ta);
     FWObject *parent_fw = ta;
-    while (parent_fw && Firewall::cast(parent_fw)==NULL)
+    while (parent_fw && Firewall::cast(parent_fw)==nullptr)
         parent_fw = parent_fw->getParent();
 
     if (parent_fw && Interface::isA(obj))
     {
-        std::auto_ptr<interfaceProperties> int_prop(
+        std::unique_ptr<interfaceProperties> int_prop(
             interfacePropertiesObjectFactory::getInterfacePropertiesObject(parent_fw));
 
         return int_prop->validateInterface(ta, obj, false, err);
     }
 
-    if (fw!=NULL)
+    if (fw!=nullptr)
     {
         // inserting some object into firewall or cluster
         if (!fw->validateChild(obj)) return false;
         return true;
     }
 
-    if (hst!=NULL)  return (hst->validateChild(obj));
+    if (hst!=nullptr)  return (hst->validateChild(obj));
 
-    if (intf!=NULL)
+    if (intf!=nullptr)
     {
         if (!intf->validateChild(obj)) return false;
         return true;
     }
 
     Group *grp=Group::cast(ta);
-    if (grp!=NULL) return grp->validateChild(obj);
+    if (grp!=nullptr) return grp->validateChild(obj);
 
     return false;
 }
@@ -503,26 +497,16 @@ FWObject* FWBTree::getStandardSlotForObject(FWObject* lib,const QString &objType
     QString level1 = path.section('/',0,0);
     QString level2 = path.section('/',1,1);
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    FWObject::iterator i=std::find_if(lib->begin(),lib->end(),
-        FWObjectNameEQPredicate(static_cast<const char*>(level1.toAscii())));
-#else
     FWObject::iterator i=std::find_if(lib->begin(),lib->end(),
         FWObjectNameEQPredicate(static_cast<const char*>(level1.toLatin1())));
-#endif
-    if (i==lib->end()) return NULL;
+    if (i==lib->end()) return nullptr;
     FWObject *l1obj = *i;
     if (level2.isEmpty()) return l1obj;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    i=std::find_if(l1obj->begin(),l1obj->end(),
-        FWObjectNameEQPredicate(static_cast<const char*>(level2.toAscii())));
-#else
     i=std::find_if(l1obj->begin(),l1obj->end(),
         FWObjectNameEQPredicate(static_cast<const char*>(level2.toLatin1())));
-#endif
 
-    if (i==l1obj->end()) return NULL;
+    if (i==l1obj->end()) return nullptr;
     return (*i);
 }
 
@@ -634,7 +618,6 @@ QString FWBTree::getTranslatableObjectTypeName(const QString &type_name)
     if (type_name == DNSName::TYPENAME) return QObject::tr("DNS Name");
     if (type_name == AddressTable::TYPENAME) return QObject::tr("Address Table");
     if (type_name == AddressRange::TYPENAME) return QObject::tr("Address Range");
-    if (type_name == AddressRangeIPv6::TYPENAME) return QObject::tr("Address Range IPv6");
     if (type_name == ObjectGroup::TYPENAME) return QObject::tr("Object Group");
     if (type_name == DynamicGroup::TYPENAME) return QObject::tr("Dynamic Group");
     if (type_name == CustomService::TYPENAME) return QObject::tr("Custom Service");
@@ -674,7 +657,6 @@ QString FWBTree::getTranslatableNewObjectMenuText(const QString &type_name)
     if (type_name == DNSName::TYPENAME) return QObject::tr("New DNS Name");
     if (type_name == AddressTable::TYPENAME) return QObject::tr("New Address Table");
     if (type_name == AddressRange::TYPENAME) return QObject::tr("New Address Range");
-    if (type_name == AddressRangeIPv6::TYPENAME) return QObject::tr("New Address Range IPv6");
     if (type_name == ObjectGroup::TYPENAME) return QObject::tr("New Object Group");
     if (type_name == DynamicGroup::TYPENAME) return QObject::tr("New Dynamic Group");
     if (type_name == CustomService::TYPENAME) return QObject::tr("New Custom Service");
@@ -713,7 +695,6 @@ QList<const char *> FWBTree::getObjectTypes()
     ret.append(DNSName::TYPENAME);
     ret.append(AddressTable::TYPENAME);
     ret.append(AddressRange::TYPENAME);
-    ret.append(AddressRangeIPv6::TYPENAME);
     ret.append(ObjectGroup::TYPENAME);
     ret.append(DynamicGroup::TYPENAME);
 

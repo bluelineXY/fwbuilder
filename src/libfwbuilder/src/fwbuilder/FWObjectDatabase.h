@@ -29,7 +29,6 @@
 
 #include "fwbuilder/FWObject.h"
 #include "fwbuilder/FWException.h"
-#include "fwbuilder/ThreadTools.h"
 #include "fwbuilder/XMLTools.h"
 
 #ifdef _WIN32
@@ -55,7 +54,6 @@ namespace libfwbuilder
 
     // forward declarations for specialized create() methods
     class AddressRange;
-    class AddressRangeIPv6;
     class AddressTable;
     class AttachedNetworks;
     class Cluster;
@@ -125,7 +123,6 @@ namespace libfwbuilder
 
     
     DECLARE_CREATE_OBJ_METHOD(AddressRange);
-    DECLARE_CREATE_OBJ_METHOD(AddressRangeIPv6);
     DECLARE_CREATE_OBJ_METHOD(AddressTable);
     DECLARE_CREATE_OBJ_METHOD(AttachedNetworks);
     DECLARE_CREATE_OBJ_METHOD(Cluster);
@@ -232,7 +229,7 @@ private:
             libfwbuilder::Group *g,
             std::set<libfwbuilder::FWObject *> &res);
         Firewall* _findFirewallByNameRecursive(
-            FWObject* db, const std::string &name) throw(FWException);
+            FWObject* db, const std::string &name);
         FWObject* _recursively_copy_subtree(FWObject *target,
                                             FWObject *source,
                                             std::map<int,int> &id_map,
@@ -291,6 +288,8 @@ public:
          * intitialize db
          */
         FWObjectDatabase(FWObjectDatabase& d);
+
+        FWObjectDatabase& operator=(const FWObjectDatabase&) = default;
 
         virtual ~FWObjectDatabase();
 
@@ -354,22 +353,22 @@ public:
 
         // --- XML import/export ---
     
-        virtual void fromXML(xmlNodePtr xml_parent_node) throw(FWException);
-        virtual xmlNodePtr toXML(xmlNodePtr parent) throw(FWException);
+        virtual void fromXML(xmlNodePtr xml_parent_node);
+        virtual xmlNodePtr toXML(xmlNodePtr parent);
     
         time_t getTimeLastModified() { return lastModified; }
         void resetTimeLastModified(time_t t) { lastModified=t; }
 
         // --- Load/Save ---
     
-        virtual void saveFile(const std::string &filename) throw(FWException); 
-        virtual void saveToBuffer(xmlChar **buffer,int *size) throw(FWException);
+        virtual void saveFile(const std::string &filename);
+        virtual void saveToBuffer(xmlChar **buffer,int *size);
         virtual void load( const std::string &filename,
                            XMLTools::UpgradePredicate *upgrade,
-                           const std::string &template_dir) throw(FWException);
+                           const std::string &template_dir);
         virtual void setDirty(bool f);
 
-        Firewall* findFirewallByName(const std::string &name) throw(FWException);
+        Firewall* findFirewallByName(const std::string &name);
 
         FWObjectDatabase* exportSubtree( FWObject *lib );
         FWObjectDatabase* exportSubtree( const std::list<FWObject*> &libs );
@@ -406,7 +405,7 @@ public:
          * tree is duplicated
          */
         virtual FWObject& duplicate(const FWObject *obj,
-                                    bool preserve_id = true) throw(FWException);
+                                    bool preserve_id = true);
 
         
         void recursivelyRemoveObjFromTree(FWObject* obj, bool remove_ref=false);
@@ -450,7 +449,7 @@ public:
             }
         };
 
-        void merge(FWObjectDatabase *ndb, ConflictResolutionPredicate *mp=NULL);
+        void merge(FWObjectDatabase *ndb, ConflictResolutionPredicate *mp=nullptr);
         void findDuplicateIds(FWObjectDatabase *ndb, std::set<int> &dupids);
         
         void setFileName(const std::string &filename);
@@ -502,7 +501,6 @@ public:
          */
 
     DECLARE_CREATE_OBJ_CLASS_METHOD(AddressRange);
-    DECLARE_CREATE_OBJ_CLASS_METHOD(AddressRangeIPv6);
     DECLARE_CREATE_OBJ_CLASS_METHOD(AddressTable);
     DECLARE_CREATE_OBJ_CLASS_METHOD(AttachedNetworks);
     DECLARE_CREATE_OBJ_CLASS_METHOD(Cluster);

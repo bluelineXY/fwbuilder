@@ -23,8 +23,6 @@
 
 */
 
-#include "../../config.h"
-#include "fwbuilder/libfwbuilder-config.h"
 #include "fwbuilder/Constants.h"
 
 #include <qsettings.h>
@@ -54,16 +52,6 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#ifdef HAVE_GETOPT_H
-#  include <getopt.h>
-#else
-#  ifdef _WIN32
-#    include <getopt.h>
-#  else
-#    include <stdlib.h>
-#  endif
-#endif
-
 #include "fwbuilder/Resources.h"
 
 #include "fwbuilder/FWObjectDatabase.h"
@@ -81,7 +69,6 @@
 #include "fwbuilder/DNSName.h"
 #include "fwbuilder/AddressTable.h"
 #include "fwbuilder/AddressRange.h"
-#include "fwbuilder/AddressRangeIPv6.h"
 #include "fwbuilder/ObjectGroup.h"
 #include "fwbuilder/Interface.h"
 #include "fwbuilder/CustomService.h"
@@ -149,20 +136,10 @@ string getAttributeValue(FWObject *obj, const string &attr_name)
     {
         return AddressRange::cast(obj)->getRangeStart().toString();
     }
-
+    
     if (attr_name=="end_address" && objtype==AddressRange::TYPENAME)
     {
         return AddressRange::cast(obj)->getRangeEnd().toString();
-    }
-
-    if (attr_name=="start_address" && objtype==AddressRangeIPv6::TYPENAME)
-    {
-        return AddressRangeIPv6::cast(obj)->getRangeStart().toString();
-    }
-
-    if (attr_name=="end_address" && objtype==AddressRangeIPv6::TYPENAME)
-    {
-        return AddressRangeIPv6::cast(obj)->getRangeEnd().toString();
     }
 
     if (attr_name=="dnsname" && objtype==DNSName::TYPENAME)
@@ -170,7 +147,7 @@ string getAttributeValue(FWObject *obj, const string &attr_name)
         return DNSName::cast(obj)->getSourceName();
     }
 
-    if (TCPUDPService::cast(obj)!=NULL)
+    if (TCPUDPService::cast(obj)!=nullptr)
     {
         ostringstream str;
         if (attr_name=="src_range_start") 
@@ -184,7 +161,7 @@ string getAttributeValue(FWObject *obj, const string &attr_name)
         if (str.tellp()>0) return str.str();
     }
 
-    if (ICMPService::cast(obj)!=NULL)
+    if (ICMPService::cast(obj)!=nullptr)
     {
         if (attr_name=="icmp_type") return obj->getStr("type");
         if (attr_name=="icmp_code") return obj->getStr("code");
