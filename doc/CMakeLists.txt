@@ -22,6 +22,7 @@ if(UNIX AND NOT APPLE)
     endif(NOT GZIP_TOOL)
     
     add_custom_target(generate_man ALL
+        COMMAND ${GZIP_TOOL} -c ${CMAKE_CURRENT_SOURCE_DIR}/fwb_compile_all.1 > ${CMAKE_BINARY_DIR}/fwb_compile_all.1.gz
         COMMAND ${GZIP_TOOL} -c ${CMAKE_CURRENT_SOURCE_DIR}/fwbedit.1 > ${CMAKE_BINARY_DIR}/fwbedit.1.gz
         COMMAND ${GZIP_TOOL} -c ${CMAKE_CURRENT_SOURCE_DIR}/fwbuilder.1 > ${CMAKE_BINARY_DIR}/fwbuilder.1.gz
         COMMAND ${GZIP_TOOL} -c ${CMAKE_CURRENT_SOURCE_DIR}/fwb_iosacl.1 > ${CMAKE_BINARY_DIR}/fwb_iosacl.1.gz
@@ -32,6 +33,7 @@ if(UNIX AND NOT APPLE)
         COMMAND ${GZIP_TOOL} -c ${CMAKE_CURRENT_SOURCE_DIR}/fwb_pix.1 > ${CMAKE_BINARY_DIR}/fwb_pix.1.gz)
     
     install(FILES ${CMAKE_BINARY_DIR}/fwbedit.1.gz
+            ${CMAKE_BINARY_DIR}/fwb_compile_all.1.gz
             ${CMAKE_BINARY_DIR}/fwbuilder.1.gz
             ${CMAKE_BINARY_DIR}/fwb_iosacl.1.gz
             ${CMAKE_BINARY_DIR}/fwb_ipf.1.gz

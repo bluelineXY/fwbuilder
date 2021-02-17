@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Sirius Bakke <sirius@bakke.co>
 Build-Depends: debhelper (>=11~), cdbs, cmake, qtbase5-dev,
  qttools5-dev-tools, zlib1g-dev, libxml2-dev, libxslt1-dev, libsnmp-dev
-Standards-Version: 3.9.3
+Standards-Version: 4.5.0
 Homepage: https://www.fwbuilder.org
 Vcs-Browser: https://github.com/fwbuilder/fwbuilder
 Vcs-Git: https://github.com/fwbuilder/fwbuilder.git
@@ -56,7 +56,7 @@ Description: Firewall administration tool GUI documentation
 
 Package: fwbuilder-dbg
 Section: debug
-Priority: extra
+Priority: optional
 Architecture: any
 Depends: fwbuilder (= ${binary:Version}), ${misc:Depends}
 Description: Firewall administration tool GUI (debugging symbols)
