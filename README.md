@@ -31,5 +31,6 @@ Note: default destination is /usr/local. This is configurable:
 Create deb package
 ---------
 ```
+sudo apt install devscripts  debhelper cdbs
 debuild -us -uc --lintian-opts --profile debian
 ```
